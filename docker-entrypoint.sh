@@ -94,14 +94,17 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 				RewriteCond %{REQUEST_FILENAME} !-d
 				RewriteRule . /index.php [L]
 
-				php_value post_max_size 64M
-				php_value upload_max_filesize 64M
-                                
 				</IfModule>
 				# END WordPress
 			EOF
 			chown "$user:$group" .htaccess
 		fi
+                if [[ $(grep -L "php_value post_max_size" /etc/passwd) ]]; then
+                   echo 'php_value post_max_size 64M' >> .htaccess
+                fi
+                if [[ $(grep -L "php_value upload_max_filesize" /etc/passwd) ]]; then
+                   echo 'php_value upload_max_filesize 64M' >> .htaccess
+                fi
 	fi
 
 	# allow any of these "Authentication Unique Keys and Salts." to be specified via
