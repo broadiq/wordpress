@@ -5,6 +5,14 @@ set -euo pipefail
 #    ie: file_env 'XYZ_DB_PASSWORD' 'example'
 # (will allow for "$XYZ_DB_PASSWORD_FILE" to fill in the value of
 #  "$XYZ_DB_PASSWORD" from a file, especially for Docker's secrets feature)
+
+if [[ -z "${FILE_UPLOAD_SIZE}" ]]; then
+  echo "Some default value because FILE_UPLOAD_SIZE is undefined"
+else
+  echo "php_value post_max_size ${FILE_UPLOAD_SIZE}M" >> /usr/local/etc/php/conf.d/php.ini
+  echo 'php_value upload_max_filesize ${FILE_UPLOAD_SIZE}M' >> /usr/local/etc/php/conf.d/php.ini
+fi
+
 file_env() {
 	local var="$1"
 	local fileVar="${var}_FILE"
